@@ -1,0 +1,35 @@
+name: "Ruby test"
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  tests:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            ruby: "3.2"
+          - os: windows-latest
+            ruby: "2.7"
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "${{ matrix.ruby }}"
+          bundler: none
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Run test
+        shell: bash
+        env:
+          GRPC_VERBOSITY: DEBUG
+          GRPC_TRACE: all          
+        run: |
+          gem install grpc:1.58.0
+          ruby grpc-test.rb

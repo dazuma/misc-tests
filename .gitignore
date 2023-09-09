@@ -1,0 +1,5 @@
+Gemfile.lock
+/**/.bundle/
+/**/.yardoc/
+/tmp
+.DS_Store
